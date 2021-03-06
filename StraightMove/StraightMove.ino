@@ -1,8 +1,3 @@
-#include "Wire.h"
-#include <MPU6050_light.h>
-
-MPU6050 mpu(Wire);
-
 int encoder_pin_1 = 2;
 int encoder_pin_2 = 3;
 int rpm_r, rpm_l;
@@ -26,7 +21,7 @@ float pwm_max = 255;
 float S_r, S_l, S;
 
 float dt_v, prev_time_v, prev_err_v, curr_time_v, sum_v, u_v;
-float k_p_v = 1;
+float k_p_v = 2;
 float k_i_v = 0.00;
 float k_d_v = 0;
 
@@ -44,11 +39,7 @@ float setpoint_v = 5;
 float setpoint_w = 0;
 float v_pwm_r, v_pwm_l, w_pwm, v, w, pwm_r, pwm_l;
 
-float yaw = 0;
-float maxangle[] = {90, 180, 270};
-int turn = 0;
-bool mode = true;
-float off = 0;
+
 
 void counter_1() {
   pulses_1++;
@@ -67,7 +58,7 @@ void Move() {
     rpm_l = (pulses_2 * 60) / (HOLES_DISC);
 
     v_pwm_r = 90;
-    v_pwm_l = 99;
+    v_pwm_l = 97;
     w_pwm = 0;
     v = (rpm_r + rpm_l) / (2 * rpm_max) * 100;
     w = (rpm_r - rpm_l)  / rpm_max * 100;
@@ -94,13 +85,6 @@ void Move() {
 void setup()
 {
   Serial.begin(9600);
-  Wire.begin();
-
-  mpu.begin();
-
-  delay(1000);
-  mpu.calcOffsets(); // gyro and accelero
-  mpu.setFilterGyroCoef(0.98);
   pinMode(encoder_pin_1, INPUT);
   pinMode(encoder_pin_2, INPUT);
 
@@ -117,55 +101,13 @@ void setup()
   pinMode(IN2, OUTPUT);
   pinMode(IN3, OUTPUT);
   pinMode(IN4, OUTPUT);
+  delay(1000);
 
 }
 
 void loop()
 {
-  mpu.update();
-  S_r = (pulses_1 / HOLES_DISC) * 3.14 * 6.5;
-  S_l = (pulses_2 / HOLES_DISC) * 3.14 * 6.5;
-  S =  (S_r + S_l) / 2;
-  yaw = mpu.getAngleZ();
-
-  if (turn != 4)
-  {
-    float angle = maxangle[turn];
-
-    if (mode)
-    {
-      if (S > 17)
-      {
-        Stop();
-        mode = !mode;
-        delay(1000);
-      }
-      else
         Move();
-    }
-    else
-      ROTATE_TO(angle);
-  }
-}
-
-void ROTATE_TO (float angle)
-{
-  if (abs(yaw) >= maxangle[turn] + off)
-  {
-    Stop();
-    turn++;
-    mode = !mode;
-    pulses_1 = 0;
-    pulses_2 = 0;
-    off = yaw - maxangle[turn - 1];
-    delay(1000);
-
-  }
-  else
-  {
-    ANTIROTATE(97);
-  }
-
 }
 
 float PID_v(float err_v)
@@ -192,27 +134,6 @@ float PID_w(float err_w)
   return u;
 }
 
-
-
-void ROTATE (int Speed)
-{
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, HIGH);
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, HIGH);
-  analogWrite(ENA, Speed);
-  analogWrite(ENB, Speed);
-}
-
-void ANTIROTATE (int Speed)
-{
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, HIGH);
-  digitalWrite(IN4, LOW);
-  analogWrite(ENA, Speed);
-  analogWrite(ENB, Speed);
-}
 
 void FORWARD (int Speed1, int Speed2)
 {
