@@ -57,7 +57,7 @@ void counter_1() {
 void counter_2() {
   pulses_2++;
 }
-
+// для прямого движения использовал регуляторы для линейной и угловой скорости
 void Move() {
   if (millis() - timeold >= 1000) {
     detachInterrupt(digitalPinToInterrupt(encoder_pin_1));
@@ -134,7 +134,7 @@ void loop()
 
     if (mode)
     {
-      if (S > 17)
+      if (S > sm(30))
       {
         Stop();
         mode = !mode;
@@ -147,7 +147,14 @@ void loop()
       ROTATE_TO(angle);
   }
 }
-
+float sm(float sm)
+{
+  return sm * 0.566;
+}
+}
+// Для измерения углов были использованы показания гироскопа и отрегулирована мощность сигнала на вход моторов
+// Данный подход был использован так как другие методы такие как пид регуляторы не дали удовлетворительных результатов 
+// и измерение по угловой скорости было не таким точным
 void ROTATE_TO (float angle)
 {
   if (abs(yaw) >= maxangle[turn] + off)
