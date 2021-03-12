@@ -21,24 +21,23 @@ float pwm_max = 255;
 float S_r, S_l, S;
 
 float dt_v, prev_time_v, prev_err_v, curr_time_v, sum_v, u_v;
-float k_p_v = 2;
-float k_i_v = 0.00;
+float k_p_v = 1;
+float k_i_v = 0.000;
 float k_d_v = 0;
 
 float dt_w, prev_time_w, prev_err_w, curr_time_w, sum_w, u_w;
-float k_p_w = 2;
-float k_i_w = 0.00;
-float k_d_w = 0;
+float k_p_w = 6.6;
+float k_i_w = 0.0000;
+float k_d_w = 0.00;
 
 float L = 12.3;
 float r = 6.5 / 2;
 float rpm_max = 250;
 float v_max = rpm_max * r;
 float w_max = (r / L) * 250;
-float setpoint_v = 5;
+float setpoint_v = 35;
 float setpoint_w = 0;
 float v_pwm_r, v_pwm_l, w_pwm, v, w, pwm_r, pwm_l;
-
 
 
 void counter_1() {
@@ -58,7 +57,7 @@ void Move() {
     rpm_l = (pulses_2 * 60) / (HOLES_DISC);
 
     v_pwm_r = 90;
-    v_pwm_l = 97;
+    v_pwm_l = 99;
     w_pwm = 0;
     v = (rpm_r + rpm_l) / (2 * rpm_max) * 100;
     w = (rpm_r - rpm_l)  / rpm_max * 100;
@@ -85,6 +84,7 @@ void Move() {
 void setup()
 {
   Serial.begin(9600);
+ 
   pinMode(encoder_pin_1, INPUT);
   pinMode(encoder_pin_2, INPUT);
 
@@ -101,13 +101,23 @@ void setup()
   pinMode(IN2, OUTPUT);
   pinMode(IN3, OUTPUT);
   pinMode(IN4, OUTPUT);
-  delay(1000);
 
 }
 
 void loop()
 {
-        Move();
+  S_r = (pulses_1 / HOLES_DISC) * 3.14 * 6.5;
+  S_l = (pulses_2 / HOLES_DISC) * 3.14 * 6.5;
+  S =  (S_r + S_l) / 2;
+  if (S < 150)
+    Move();
+  else
+    Stop();
+
+}
+float sm(float sm)
+{
+  return sm * 0.566;
 }
 
 float PID_v(float err_v)

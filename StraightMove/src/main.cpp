@@ -1,5 +1,7 @@
+#include <Arduino.h>
+
 #include "Wire.h"
-#include <MPU6050_light.h>
+#include <MPU6050_light>
 
 MPU6050 mpu(Wire);
 
@@ -57,7 +59,7 @@ void counter_1() {
 void counter_2() {
   pulses_2++;
 }
-// для прямого движения использовал регуляторы для линейной и угловой скорости
+
 void Move() {
   if (millis() - timeold >= 1000) {
     detachInterrupt(digitalPinToInterrupt(encoder_pin_1));
@@ -80,7 +82,7 @@ void Move() {
     pwm_l = v_pwm_l + pidv - w_pwm - pidw;
 
     FORWARD(min(max(90, pwm_l), 255), min(max(90, pwm_r), 255));
-    
+
     timeold = millis();
     pulses_1 = 0;
     pulses_2 = 0;
@@ -134,7 +136,7 @@ void loop()
 
     if (mode)
     {
-      if (S > sm(30))
+      if (S > 17)
       {
         Stop();
         mode = !mode;
@@ -148,14 +150,6 @@ void loop()
   }
 }
 
-float sm(float sm)
-{
-  return sm * 0.566;
-}
-
-// Для измерения углов были использованы показания гироскопа и отрегулирована мощность сигнала на вход моторов
-// Данный подход был использован так как другие методы такие как пид регуляторы не дали удовлетворительных результатов 
-// и измерение по угловой скорости было не таким точным
 void ROTATE_TO (float angle)
 {
   if (abs(yaw) >= maxangle[turn] + off)
