@@ -26,8 +26,8 @@ float k_i_v = 0.000;
 float k_d_v = 0;
 
 float dt_w, prev_time_w, prev_err_w, curr_time_w, sum_w, u_w;
-float k_p_w = 6.6;
-float k_i_w = 0.0000;
+float k_p_w = 3.3;
+float k_i_w = 0.0052;
 float k_d_w = 0.00;
 
 float L = 12.3;
