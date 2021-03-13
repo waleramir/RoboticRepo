@@ -21,13 +21,13 @@ float pwm_max = 255;
 float S_r, S_l, S;
 
 float dt_v, prev_time_v, prev_err_v, curr_time_v, sum_v, u_v;
-float k_p_v = 1;
-float k_i_v = 0.000;
+float k_p_v = 0.002;
+float k_i_v = 0.00;
 float k_d_v = 0;
 
 float dt_w, prev_time_w, prev_err_w, curr_time_w, sum_w, u_w;
-float k_p_w = 3.3;
-float k_i_w = 0.0052;
+float k_p_w = 1;
+float k_i_w = 0.00;
 float k_d_w = 0.00;
 
 float L = 12.3;
@@ -69,6 +69,14 @@ void Move() {
     pwm_r = v_pwm_r + pidv + w_pwm + pidw;
     pwm_l = v_pwm_l + pidv - w_pwm - pidw;
 
+    Serial.print("v: ");
+    Serial.print(v);
+    Serial.print(" w: ");
+    Serial.print(w);
+    Serial.print(" rpml: ");
+    Serial.print(rpm_l);
+    Serial.print(" rpmr: ");
+    Serial.println(rpm_r);
     FORWARD(min(max(90, pwm_l), 255), min(max(90, pwm_r), 255));
 
     timeold = millis();
@@ -84,7 +92,7 @@ void Move() {
 void setup()
 {
   Serial.begin(9600);
- 
+
   pinMode(encoder_pin_1, INPUT);
   pinMode(encoder_pin_2, INPUT);
 
