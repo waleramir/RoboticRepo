@@ -16,26 +16,26 @@ unsigned long timeold;
 
 float err_1, err_2, u_1, u_2;
 float rpm_setpoint = 100;
-float pwm_min = 100;
+float pwm_min = 35;
 float pwm_max = 255;
 float S_r, S_l, S;
 
 float dt_v, prev_time_v, prev_err_v, curr_time_v, sum_v, u_v;
-float k_p_v = 0.002;
-float k_i_v = 0.00;
-float k_d_v = 0;
+float k_p_v = 2.5;
+float k_i_v =0.000;
+float k_d_v = 0.00;
 
 float dt_w, prev_time_w, prev_err_w, curr_time_w, sum_w, u_w;
-float k_p_w = 1;
-float k_i_w = 0.00;
-float k_d_w = 0.00;
+float k_p_w = 1;//2.48
+float k_i_w = 0.0000;
+float k_d_w = 0.00000;
 
 float L = 12.3;
 float r = 6.5 / 2;
-float rpm_max = 250;
-float v_max = rpm_max * r;
-float w_max = (r / L) * 250;
-float setpoint_v = 35;
+float rpm_max = 700;
+float v_max = (rpm_max) * (r);
+float w_max = (r / L) * rpm_max;
+float setpoint_v = 55;
 float setpoint_w = 0;
 float v_pwm_r, v_pwm_l, w_pwm, v, w, pwm_r, pwm_l;
 
@@ -59,7 +59,7 @@ void Move() {
     v_pwm_r = 90;
     v_pwm_l = 99;
     w_pwm = 0;
-    v = (rpm_r + rpm_l) / (2 * rpm_max) * 100;
+    v = (rpm_r + rpm_l) / (rpm_max) * 100;
     w = (rpm_r - rpm_l)  / rpm_max * 100;
 
     float err_v = setpoint_v - v;
@@ -78,7 +78,7 @@ void Move() {
     Serial.print(" rpmr: ");
     Serial.println(rpm_r);
     FORWARD(min(max(90, pwm_l), 255), min(max(90, pwm_r), 255));
-
+     //FORWARD(90,90);
     timeold = millis();
     pulses_1 = 0;
     pulses_2 = 0;
@@ -117,10 +117,9 @@ void loop()
   S_r = (pulses_1 / HOLES_DISC) * 3.14 * 6.5;
   S_l = (pulses_2 / HOLES_DISC) * 3.14 * 6.5;
   S =  (S_r + S_l) / 2;
-  if (S < 150)
-    Move();
-  else
-    Stop();
+
+  Move();
+
 
 }
 float sm(float sm)
