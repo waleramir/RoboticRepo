@@ -3,7 +3,7 @@ face_cascade = cv2.CascadeClassifier(
     'D:/ANDA/Lib/site-packages/cv2/data/haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier(
     'D:/ANDA/Lib/site-packages/cv2/data/haarcascade_eye.xml')
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 out = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc(
     'M', 'J', 'P', 'G'), 10, (640, 480))
 while True:

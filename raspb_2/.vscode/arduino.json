@@ -1,0 +1,9 @@
+{
+    "board": "arduino:avr:uno",
+    "programmer": "arduino:avrisp",
+    "sketch": "raspb_2.ino",
+    "port": "COM3",
+    "output": "../ArduinoOutput",
+    "debugger": "jlink",
+    "intelliSenseGen": "global"
+}

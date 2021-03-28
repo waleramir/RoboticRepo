@@ -1,0 +1,12 @@
+{
+    "folders": [
+		{
+			"path": "."
+		}
+	],
+    "settings": {
+        "debug.openDebug": "neverOpen",
+        "python.languageServer": "None",
+        "python.pythonPath": "D:\\ANDA\\python.exe"
+    }
+}

@@ -1,5 +1,0 @@
-{
-    "sketch": "Square.ino",
-    "board": "arduino:avr:uno",
-    "port": "COM3"
-}
