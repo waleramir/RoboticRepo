@@ -120,25 +120,7 @@ void BACKWARD(int Speed1, int Speed2)
   analogWrite(ENA, Speed1);
   analogWrite(ENB, Speed2);
 }
-void ROTATE(int Speed)
-{
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, HIGH);
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, HIGH);
-  analogWrite(ENA, Speed);
-  analogWrite(ENB, Speed);
-}
 
-void ANTIROTATE(int Speed)
-{
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, HIGH);
-  digitalWrite(IN4, LOW);
-  analogWrite(ENA, Speed);
-  analogWrite(ENB, Speed);
-}
 void Stop()
 {
   analogWrite(ENA, 0);
